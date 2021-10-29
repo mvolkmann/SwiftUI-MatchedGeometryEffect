@@ -19,12 +19,20 @@ struct ContentView: View {
             ForEach(foods) { food in
                 if food.selected == selected {
                     Text(food.name)
-                        .matchedGeometryEffect(id: food.id, in: foodNS)
+                        .matchedGeometryEffect(
+                            id: food.id,
+                            in: foodNS,
+                            //TODO: Is this preventing smooth transitions?
+                            //TODO: Without this the text sometimes disappears.
+                            isSource: false
+                        )
                         .onTapGesture {
                             withAnimation { toggle(food: food) }
                         }
                 }
             }
+        }.onAppear {
+            print("foodList rendered")
         }
     }
     
