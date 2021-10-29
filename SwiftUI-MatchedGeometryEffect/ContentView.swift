@@ -35,8 +35,6 @@ struct ContentView: View {
                         }
                 }
             }
-        }.onAppear {
-            print("foodList rendered")
         }
     }
     
