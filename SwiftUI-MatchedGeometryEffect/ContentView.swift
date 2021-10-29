@@ -17,14 +17,18 @@ struct ContentView: View {
     func foodList(selected: Bool) -> some View {
         List {
             ForEach(foods) { food in
-                if food.selected == selected {
+                let use = food.selected == selected
+                if use {
                     Text(food.name)
                         .matchedGeometryEffect(
                             id: food.id,
-                            in: foodNS,
-                            //TODO: Is this preventing smooth transitions?
+                            in: foodNS
+                            /*
+                            //TODO: Does this prevent smooth transitions?
                             //TODO: Without this the text sometimes disappears.
                             isSource: false
+                            */
+                            //isSource: !use
                         )
                         .onTapGesture {
                             withAnimation { toggle(food: food) }
