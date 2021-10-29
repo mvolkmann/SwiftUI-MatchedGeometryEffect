@@ -14,7 +14,7 @@ struct ContentView: View {
         Food(name: "Shake"),
     ]
     
-    func foodList(_ foods: [Food], selected: Bool) -> some View {
+    func foodList(selected: Bool) -> some View {
         List {
             ForEach(foods) { food in
                 if food.selected == selected {
@@ -37,11 +37,11 @@ struct ContentView: View {
         HStack {
             VStack {
                 Text("Available")
-                foodList(foods, selected: false)
+                foodList(selected: false)
             }
             VStack {
                 Text("Selected")
-                foodList(foods, selected: true)
+                foodList(selected: true)
             }
         }
     }
