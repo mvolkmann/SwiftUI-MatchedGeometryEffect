@@ -7,14 +7,12 @@ struct Food: Identifiable {
 }
 
 class Foods: ObservableObject {
-    @Published var items: [Food] = []
+    @Published var items: [Food] = [
+        Food(name: "Hamburger"),
+        Food(name: "Fries"),
+        Food(name: "Shake")
+    ]
     
-    init() {
-        items.append(Food(name: "Hamburger"))
-        items.append(Food(name: "Fries"))
-        items.append(Food(name: "Shake"))
-    }
-
     func toggle(item: Food) {
         let index = items.firstIndex(where: { $0.id == item.id })!
         items[index].selected.toggle()
