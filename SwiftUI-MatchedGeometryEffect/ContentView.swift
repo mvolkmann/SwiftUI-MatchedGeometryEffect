@@ -1,13 +1,17 @@
 import SwiftUI
 
 struct Food: Identifiable {
-    var name: String
+    // This cannot be changed after creating an instance
+    // because it is used as the id.
+    let name: String
+    
     var selected: Bool = false
+    
     var id: String { name }
 }
 
 class Foods: ObservableObject {
-    @Published var items: [Food] = [
+    @Published private(set) var items: [Food] = [
         Food(name: "Hamburger"),
         Food(name: "Fries"),
         Food(name: "Shake")
