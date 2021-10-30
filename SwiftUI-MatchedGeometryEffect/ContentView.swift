@@ -1,5 +1,10 @@
 import SwiftUI
 
+//TODO: This isn't working correctly.
+//TODO: The text views move from one List to another when clicked,
+//TODO: but they don't animate smoothly from one to the other
+//TODO: and the text often disappears after the move.
+
 struct Food: Identifiable {
     // This cannot be changed after creating an instance
     // because it is used as the id.
