@@ -1,62 +1,77 @@
 import SwiftUI
+
 struct Food: Identifiable {
     var name: String
     var selected: Bool = false
     var id: String { name }
 }
 
-struct ContentView: View {
-    @Namespace private var foodNS
+class Foods: ObservableObject {
+    @Published var items: [Food] = []
     
-    @State var foods: [Food] = [
-        Food(name: "Hamburger"),
-        Food(name: "Fries"),
-        Food(name: "Shake"),
-    ]
-    
-    func foodList(selected: Bool) -> some View {
-        List {
-            ForEach(foods) { food in
-                let use = food.selected == selected
-                if use {
-                    Text(food.name)
-                        .matchedGeometryEffect(
-                            id: food.id,
-                            in: foodNS
-                            /*
-                            //TODO: Does this prevent smooth transitions?
-                            //TODO: Without this the text sometimes disappears.
-                            isSource: false
-                            */
-                            //isSource: !use
-                        )
-                        .onTapGesture {
-                            withAnimation { toggle(food: food) }
-                        }
-                }
-            }
-        }
+    init() {
+        items.append(Food(name: "Hamburger"))
+        items.append(Food(name: "Fries"))
+        items.append(Food(name: "Shake"))
     }
-    
-    func toggle(food: Food) {
-        let index = foods.firstIndex(where: { $0.id == food.id })!
-        foods[index].selected.toggle()
+
+    func toggle(item: Food) {
+        let index = items.firstIndex(where: { $0.id == item.id })!
+        items[index].selected.toggle()
     }
+}
+
+struct FoodList: View {
+    @ObservedObject var foods: Foods
+    let namespace: Namespace.ID
+    let selected: Bool
     
     var body: some View {
-        HStack {
-            VStack {
-                Text("Available")
-                foodList(selected: false)
-            }
-            VStack {
-                Text("Selected")
-                foodList(selected: true)
+        List(foods.items) { item in
+            let use = item.selected == selected
+            if use {
+                Text(item.name)
+                    .matchedGeometryEffect(
+                        id: item.id,
+                        in: namespace
+                        /*
+                         //TODO: Does this prevent smooth transitions?
+                         //TODO: Without this the text sometimes disappears.
+                         isSource: false
+                         */
+                        //isSource: !use
+                    )
+                    .onTapGesture {
+                        print("got tap")
+                        withAnimation {
+                            // This gives the error "Cannot use mutating member
+                            // on immutable value.
+                            //item.selected.toggle()
+                            foods.toggle(item: item)
+                        }
+                    }
             }
         }
     }
 }
 
+struct ContentView: View {
+    @Namespace private var foodNS
+    @ObservedObject var foods = Foods()
+    
+    var body: some View {
+        HStack {
+            VStack {
+                Text("Available")
+                FoodList(foods: foods, namespace: foodNS, selected: false)
+            }
+            VStack {
+                Text("Selected")
+                FoodList(foods: foods, namespace: foodNS, selected: true)
+            }
+        }
+    }
+}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
